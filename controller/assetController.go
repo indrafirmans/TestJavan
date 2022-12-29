@@ -9,20 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAsset(c *gin.Context) {
-
-	members := service.GetMembers()
-
-	if members == nil {
-		Status = http.StatusBadRequest
-	}
-
-	c.JSON(Status, gin.H{
-		"status": Status,
-		"data":   members,
-	})
-}
-
 func AddAsset(c *gin.Context) {
 	c.Bind(&payload)
 	message = http.StatusText(http.StatusCreated)
@@ -42,6 +28,23 @@ func AddAsset(c *gin.Context) {
 		"message": message,
 		"data":    params,
 	})
+}
+
+func GetAsset(c *gin.Context) {
+
+	members := service.GetFamily()
+
+	if members == nil {
+		Status = http.StatusBadRequest
+	}
+
+	c.JSON(Status, gin.H{
+		"status": Status,
+		"data":   members,
+	})
+}
+
+func GetAssetById(c *gin.Context) {
 }
 
 func UpdateAsset(c *gin.Context) {

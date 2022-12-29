@@ -27,16 +27,18 @@ func main() {
 	r := gin.Default()
 
 	// api family
-	r.GET(common.UrlApi+common.UrlFamily, controller.GetFamily)
 	r.POST(common.UrlApi+common.UrlFamily, controller.AddFamily)
-	r.PUT(common.UrlApi+common.UrlFamily, controller.UpdateFamily)
-	r.DELETE(common.UrlApi+common.UrlFamily, controller.DeleteFamily)
+	r.GET(common.UrlApi+common.UrlFamily, controller.GetFamily)
+	r.GET(common.UrlApi+common.UrlFamily+"/:id", controller.GetFamilyById)
+	r.PUT(common.UrlApi+common.UrlFamily+"/:id", controller.UpdateFamily)
+	r.DELETE(common.UrlApi+common.UrlFamily+"/:id", controller.DeleteFamily)
 
 	// api asset
-	r.GET(common.UrlApi+common.UrlAsset, controller.GetAsset)
 	r.POST(common.UrlApi+common.UrlAsset, controller.AddAsset)
-	r.PUT(common.UrlApi+common.UrlAsset, controller.UpdateAsset)
-	r.DELETE(common.UrlApi+common.UrlAsset, controller.DeleteAsset)
+	r.GET(common.UrlApi+common.UrlAsset, controller.GetAsset)
+	r.GET(common.UrlApi+common.UrlAsset+"/:id", controller.GetAssetById)
+	r.PUT(common.UrlApi+common.UrlAsset+"/:id", controller.UpdateAsset)
+	r.DELETE(common.UrlApi+common.UrlAsset+"/:id", controller.DeleteAsset)
 
 	r.Run(port)
 }

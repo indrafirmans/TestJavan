@@ -1,5 +1,5 @@
 # javanid
-hi javan thanks for the opportunity
+hi javan thanks for the opportunity :smiley:
 it's go api
 - language: go
 - framework: gin 

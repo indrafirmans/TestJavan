@@ -13,7 +13,7 @@ func AddAsset(c *gin.Context) {
 	c.Bind(&payload)
 	message = http.StatusText(http.StatusCreated)
 	Status = http.StatusCreated
-	params := model.Family{
+	params := model.Asset{
 		Name: payload.Name,
 	}
 

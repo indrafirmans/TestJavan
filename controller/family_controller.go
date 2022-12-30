@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"javanid/dto"
 	"javanid/model"
 	"javanid/service"
 	"net/http"
@@ -9,118 +10,138 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var Status int = http.StatusOK
-var message string
-
-var payload struct {
+var payloadFamily struct {
 	Name     string
 	ParentId int `json:"parent"`
 }
 
 func AddFamily(c *gin.Context) {
-	c.Bind(&payload)
-	Status = http.StatusCreated
-	message = http.StatusText(Status)
+	c.Bind(&payloadFamily)
+	status := http.StatusCreated
+	message := http.StatusText(status)
+	detail := "Data created"
 	params := model.Family{
-		Name:     payload.Name,
-		ParentId: uint(payload.ParentId),
+		Name:     payloadFamily.Name,
+		ParentId: payloadFamily.ParentId,
 	}
 
-	result := service.AddFamily(&params)
-
-	if result.Error != nil {
-		Status = http.StatusBadRequest
-		message = result.Error.Error()
+	if result := service.AddFamily(&params); result.Error != nil {
+		status = http.StatusBadRequest
+		message = http.StatusText(status)
+		detail = result.Error.Error()
 	}
 
-	c.JSON(Status, gin.H{
-		"status":  Status,
-		"message": message,
-		"data":    nil,
+	c.JSON(status, dto.Response{
+		Status:  status,
+		Message: message,
+		Detail:  detail,
+		Data:    nil,
 	})
+
 }
 
 func GetFamily(c *gin.Context) {
+	status := http.StatusOK
+	message := http.StatusText(status)
+	details := "Data found"
+	result := service.GetFamily()
 
-	members := service.GetFamily()
+	if result == nil {
+		details = "Data empty"
+	}
 
-	c.JSON(Status, gin.H{
-		"status":  Status,
-		"message": http.StatusText(Status),
-		"data":    members,
+	c.JSON(status, dto.Response{
+		Status:  status,
+		Message: message,
+		Detail:  details,
+		Data:    result,
 	})
 }
 
 func GetFamilyById(c *gin.Context) {
-	var members model.Family
+	status := http.StatusOK
+	message := http.StatusText(status)
+	details := "Data found"
 	id := c.Param("id")
-	message := http.StatusText(Status)
-	newId, err := strconv.Atoi(id)
 
+	newId, err := strconv.Atoi(id)
 	if err != nil {
-		Status = http.StatusBadRequest
+		status = http.StatusBadRequest
 		message = http.StatusText(http.StatusBadRequest)
+		details = err.Error()
 	}
 
-	members = service.GetFamilyById(newId)
+	result := service.GetFamilyById(newId)
+	if result.ID == 0 {
+		details = "Data not found"
+	}
 
-	c.JSON(Status, gin.H{
-		"status":  Status,
-		"message": message,
-		"data":    members,
+	c.JSON(status, dto.Response{
+		Status:  status,
+		Message: message,
+		Detail:  details,
+		Data:    result,
 	})
 }
 
 func UpdateFamily(c *gin.Context) {
+	status := http.StatusOK
+	message := http.StatusText(status)
+	details := "Data modified"
 	id := c.Param("id")
-	c.Bind(&payload)
-	message = "record modified"
+	c.Bind(&payloadFamily)
 	params := model.Family{
-		Name:     payload.Name,
-		ParentId: uint(payload.ParentId),
+		Name:     payloadFamily.Name,
+		ParentId: payloadFamily.ParentId,
 	}
 
 	newId, err := strconv.Atoi(id)
-
 	if err != nil {
-		Status = http.StatusBadRequest
-		message = http.StatusText(http.StatusBadRequest)
+		status = http.StatusBadRequest
+		message = http.StatusText(status)
+		details = err.Error()
 	}
 
 	result := service.UpdateFamily(newId, params)
 	if result.Error != nil {
-		Status = http.StatusBadRequest
-		message = result.Error.Error()
+		status = http.StatusBadRequest
+		message = http.StatusText(status)
+		details = result.Error.Error()
 	}
 
-	c.JSON(Status, gin.H{
-		"status":  Status,
-		"message": message,
-		"data":    nil,
+	c.JSON(status, dto.Response{
+		Status:  status,
+		Message: message,
+		Detail:  details,
+		Data:    result,
 	})
 }
 
 func DeleteFamily(c *gin.Context) {
+	status := http.StatusOK
+	message := http.StatusText(status)
+	details := "Data deleted"
 	id := c.Param("id")
-	c.Bind(&payload)
-	message = "record deleted"
+	c.Bind(&payloadFamily)
 
 	newId, err := strconv.Atoi(id)
-
 	if err != nil {
-		Status = http.StatusBadRequest
+		status = http.StatusBadRequest
 		message = http.StatusText(http.StatusBadRequest)
+		details = err.Error()
 	}
 
 	result := service.RemoveFamily(newId)
 	if result.Error != nil {
-		Status = http.StatusBadRequest
-		message = result.Error.Error()
+		status = http.StatusBadRequest
+		message = http.StatusText(status)
+		details = result.Error.Error()
 	}
 
-	c.JSON(Status, gin.H{
-		"status":  Status,
-		"message": message,
-		"data":    nil,
+	c.JSON(status, dto.Response{
+		Status:  status,
+		Message: message,
+		Detail:  details,
+		Data:    result,
 	})
 }

@@ -12,24 +12,24 @@ func AddFamily(params *model.Family) *gorm.DB {
 }
 
 func GetFamily() []model.Family {
-	var members []model.Family
+	var datas []model.Family
 
-	db.Conn().Find(&members)
+	db.Conn().Find(&datas)
 
-	return members
+	return datas
 }
 
 func GetFamilyById(id int) model.Family {
-	var members model.Family
+	var datas model.Family
 
-	db.Conn().First(&members, id)
+	db.Conn().First(&datas, id)
 
-	return members
+	return datas
 }
 
 func UpdateFamily(id int, params model.Family) *gorm.DB {
-	var family model.Family
-	return db.Conn().Model(family).Where("id = ?", id).Updates(model.Family{
+	var datas model.Family
+	return db.Conn().Model(datas).Where("id = ?", id).Updates(model.Family{
 		Name:     params.Name,
 		ParentId: params.ParentId,
 	})

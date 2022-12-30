@@ -5,5 +5,5 @@ import "gorm.io/gorm"
 type Asset struct {
 	gorm.Model
 	Name       string
-	AssetOwner uint
+	AssetOwner int
 }
